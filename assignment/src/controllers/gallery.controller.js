@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const fs = require("fs");
 
 const Gallery = require("../models/gallery.model");
 const User = require("../models/user.model");
@@ -22,7 +23,11 @@ router.get("/delete/:file/:id", async(req, res) => {
     if(item) {
         let index = item.pictures.findIndex(file);
         if(index > -1) {
-            item.pictures.splice(index, 1);
+           let hold =  item.pictures.splice(index, 1);
+           fs.unlink(hold, function(err) {
+               if(err) throw err;
+               console.log("file deleted");
+           })
             item.save();
         }
     }
